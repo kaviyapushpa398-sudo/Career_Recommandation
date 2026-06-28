@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Smart Career Recommendation System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <nav class="topnav">
+        <span class="topnav-brand">🎯 Smart Career</span>
+        <div class="topnav-links">
+            <a href="{{ url_for('dashboard') }}" class="active">Dashboard</a>
+            <a href="{{ url_for('profile_page') }}">My Profile</a>
+            <a href="{{ url_for('github_page') }}">GitHub Analysis</a>
+            <a href="{{ url_for('careers_page') }}">Career Recommendations</a>
+        </div>
+        <button id="logoutBtn" class="btn-nav-logout">Log Out</button>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="welcome-card">
+            <div class="welcome-icon">👋</div>
+            <h1>Welcome back, {{ full_name }}!</h1>
+            <p>You are logged in to the Smart Career Recommendation System.</p>
+
+            <div class="quick-links">
+                <a href="{{ url_for('profile_page') }}" class="quick-link-card">
+                    <div class="ql-icon">👤</div>
+                    <div class="ql-label">My Profile</div>
+                    <div class="ql-sub">Skills, interests, certifications &amp; projects</div>
+                </a>
+                <a href="{{ url_for('github_page') }}" class="quick-link-card">
+                    <div class="ql-icon">🐙</div>
+                    <div class="ql-label">GitHub Analysis</div>
+                    <div class="ql-sub">Repos, languages &amp; activity score</div>
+                </a>
+                <a href="{{ url_for('careers_page') }}" class="quick-link-card">
+                    <div class="ql-icon">🤖</div>
+                    <div class="ql-label">Career Recommendations</div>
+                    <div class="ql-sub">Match scores, roadmaps &amp; skill gaps</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Smart Career Recommendation System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="inner-page">
+
+    <!-- ── Top Navigation ── -->
+    <nav class="topnav">
+        <span class="topnav-brand">🎯 Smart Career</span>
+        <div class="topnav-links">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('profile_page') }}" class="active">My Profile</a>
+        </div>
+        <button id="logoutBtn" class="btn-nav-logout">Log Out</button>
+    </nav>
+
+    <!-- ── Two-column layout ── -->
+    <div class="profile-layout">
+
+        <!-- Side navigation -->
+        <aside class="profile-sidenav">
+            <div class="sidenav-header">Profile Sections</div>
+            <div class="sidenav-link active" data-section="personal">
+                <span class="sn-icon">👤</span> Personal Info
+            </div>
+            <div class="sidenav-link" data-section="skills">
+                <span class="sn-icon">🛠️</span> Skills
+            </div>
+            <div class="sidenav-link" data-section="interests">
+                <span class="sn-icon">💡</span> Interests
+            </div>
+            <div class="sidenav-link" data-section="certifications">
+                <span class="sn-icon">📜</span> Certifications
+            </div>
+            <div class="sidenav-link" data-section="projects">
+                <span class="sn-icon">🚀</span> Projects
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="profile-content">
+
+            <!-- ══════════════════════════════════════
+                 SECTION 1 — Personal Info
+                 ══════════════════════════════════════ -->
+            <section class="profile-section active" id="section-personal">
+                <div class="section-header">
+                    <h2>👤 Personal Information</h2>
+                </div>
+
+                <div id="personalAlert" class="alert-box hidden"></div>
+
+                <form id="personalForm" novalidate>
+                    <div class="profile-form-grid">
+
+                        <!-- Read-only account fields -->
+                        <div class="form-group">
+                            <label for="display_full_name">Full Name</label>
+                            <input type="text" id="display_full_name" readonly
+                                   style="background:#f4f8fb;color:#888;cursor:not-allowed;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="display_email">Email</label>
+                            <input type="text" id="display_email" readonly
+                                   style="background:#f4f8fb;color:#888;cursor:not-allowed;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="display_username">Username</label>
+                            <input type="text" id="display_username" readonly
+                                   style="background:#f4f8fb;color:#888;cursor:not-allowed;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone"
+                                   placeholder="e.g. +1 555 123 4567">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="date_of_birth">Date of Birth</label>
+                            <input type="date" id="date_of_birth" name="date_of_birth">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender">
+                                <option value="">— Select —</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="education_level">Education Level</label>
+                            <select id="education_level" name="education_level">
+                                <option value="">— Select —</option>
+                                <option value="High School">High School</option>
+                                <option value="Diploma">Diploma</option>
+                                <option value="Undergraduate">Undergraduate</option>
+                                <option value="Postgraduate">Postgraduate</option>
+                                <option value="PhD">PhD</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="graduation_year">Graduation Year</label>
+                            <input type="number" id="graduation_year" name="graduation_year"
+                                   min="1950" max="2100" placeholder="e.g. 2026">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="institution_name">Institution / University Name</label>
+                            <input type="text" id="institution_name" name="institution_name"
+                                   placeholder="e.g. MIT, Stanford University">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="field_of_study">Field of Study</label>
+                            <input type="text" id="field_of_study" name="field_of_study"
+                                   placeholder="e.g. Computer Science, Data Science">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="linkedin_url">LinkedIn Profile URL</label>
+                            <input type="url" id="linkedin_url" name="linkedin_url"
+                                   placeholder="https://linkedin.com/in/yourname">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="github_url">GitHub Profile URL</label>
+                            <input type="url" id="github_url" name="github_url"
+                                   placeholder="https://github.com/yourname">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="bio">Bio / About You</label>
+                            <textarea id="bio" name="bio" rows="4"
+                                      placeholder="Write a short bio about yourself, your goals and interests..."></textarea>
+                        </div>
+
+                    </div><!-- /profile-form-grid -->
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save" id="savePersonalBtn">Save Profile</button>
+                        <span class="save-status" id="personalSaveStatus"></span>
+                    </div>
+                </form>
+            </section>
+
+            <!-- ══════════════════════════════════════
+                 SECTION 2 — Skills
+                 ══════════════════════════════════════ -->
+            <section class="profile-section" id="section-skills">
+                <div class="section-header">
+                    <h2>🛠️ Skills</h2>
+                </div>
+
+                <div class="add-row">
+                    <input type="text" id="newSkillName" placeholder="Enter skill name (e.g. Python, React)"
+                           maxlength="100">
+                    <select id="newSkillProficiency">
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                        <option value="Expert">Expert</option>
+                    </select>
+                    <button class="btn-add" id="addSkillBtn">+ Add Skill</button>
+                </div>
+                <div class="inline-error" id="skillError"></div>
+
+                <div class="tags-container" id="skillsContainer">
+                    <div class="empty-state">
+                        <div class="empty-icon">🛠️</div>
+                        <div>No skills added yet.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══════════════════════════════════════
+                 SECTION 3 — Interests
+                 ══════════════════════════════════════ -->
+            <section class="profile-section" id="section-interests">
+                <div class="section-header">
+                    <h2>💡 Interests</h2>
+                </div>
+
+                <div class="add-row">
+                    <input type="text" id="newInterestName"
+                           placeholder="Enter interest (e.g. Machine Learning, Web Design)"
+                           maxlength="100">
+                    <button class="btn-add" id="addInterestBtn">+ Add Interest</button>
+                </div>
+                <div class="inline-error" id="interestError"></div>
+
+                <div class="tags-container" id="interestsContainer">
+                    <div class="empty-state">
+                        <div class="empty-icon">💡</div>
+                        <div>No interests added yet.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══════════════════════════════════════
+                 SECTION 4 — Certifications
+                 ══════════════════════════════════════ -->
+            <section class="profile-section" id="section-certifications">
+                <div class="section-header">
+                    <h2>📜 Certifications</h2>
+                    <button class="btn-add" id="showCertFormBtn">+ Add</button>
+                </div>
+
+                <!-- Add form (hidden by default) -->
+                <div class="add-form-panel" id="certFormPanel" style="display:none;">
+                    <h3>New Certification</h3>
+                    <div class="add-form-grid">
+                        <div class="full-width">
+                            <label>Certification Name *</label>
+                            <input type="text" id="certName" placeholder="e.g. AWS Certified Developer" maxlength="150">
+                        </div>
+                        <div>
+                            <label>Issuing Organization</label>
+                            <input type="text" id="certOrg" placeholder="e.g. Amazon Web Services" maxlength="150">
+                        </div>
+                        <div>
+                            <label>Credential URL</label>
+                            <input type="url" id="certUrl" placeholder="https://credential.link">
+                        </div>
+                        <div>
+                            <label>Issue Date</label>
+                            <input type="date" id="certIssueDate">
+                        </div>
+                        <div>
+                            <label>Expiry Date</label>
+                            <input type="date" id="certExpiryDate">
+                        </div>
+                    </div>
+                    <div class="inline-error" id="certError"></div>
+                    <div class="add-form-actions">
+                        <button class="btn-save" id="saveCertBtn">Save Certification</button>
+                        <button class="btn-cancel" id="cancelCertBtn">Cancel</button>
+                    </div>
+                </div>
+
+                <div class="card-list" id="certsContainer">
+                    <div class="empty-state">
+                        <div class="empty-icon">📜</div>
+                        <div>No certifications added yet.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══════════════════════════════════════
+                 SECTION 5 — Projects
+                 ══════════════════════════════════════ -->
+            <section class="profile-section" id="section-projects">
+                <div class="section-header">
+                    <h2>🚀 Projects</h2>
+                    <button class="btn-add" id="showProjectFormBtn">+ Add</button>
+                </div>
+
+                <!-- Add form (hidden by default) -->
+                <div class="add-form-panel" id="projectFormPanel" style="display:none;">
+                    <h3>New Project</h3>
+                    <div class="add-form-grid">
+                        <div class="full-width">
+                            <label>Project Title *</label>
+                            <input type="text" id="projTitle" placeholder="e.g. E-Commerce Website" maxlength="150">
+                        </div>
+                        <div class="full-width">
+                            <label>Description</label>
+                            <textarea id="projDesc" rows="3"
+                                      placeholder="What did you build? What problem did it solve?"></textarea>
+                        </div>
+                        <div class="full-width">
+                            <label>Technologies Used</label>
+                            <input type="text" id="projTech"
+                                   placeholder="e.g. Python, Flask, MySQL, React" maxlength="255">
+                        </div>
+                        <div>
+                            <label>Project URL</label>
+                            <input type="url" id="projUrl" placeholder="https://github.com/...">
+                        </div>
+                        <div>
+                            <label>Start Date</label>
+                            <input type="date" id="projStartDate">
+                        </div>
+                        <div>
+                            <label>End Date</label>
+                            <input type="date" id="projEndDate" id="projEndDate">
+                        </div>
+                        <div class="full-width">
+                            <div class="ongoing-row">
+                                <input type="checkbox" id="projOngoing">
+                                <label for="projOngoing" style="font-size:13.5px;margin-bottom:0;font-weight:500;">
+                                    This project is currently ongoing
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline-error" id="projectError"></div>
+                    <div class="add-form-actions">
+                        <button class="btn-save" id="saveProjectBtn">Save Project</button>
+                        <button class="btn-cancel" id="cancelProjectBtn">Cancel</button>
+                    </div>
+                </div>
+
+                <div class="card-list" id="projectsContainer">
+                    <div class="empty-state">
+                        <div class="empty-icon">🚀</div>
+                        <div>No projects added yet.</div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div><!-- /profile-layout -->
+
+    <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

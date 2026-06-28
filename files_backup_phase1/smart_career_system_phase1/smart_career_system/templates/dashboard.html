@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Smart Career Recommendation System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div class="auth-wrapper">
+        <div class="auth-card dashboard-card">
+            <div class="auth-header">
+                <h1>Welcome, {{ full_name }} 👋</h1>
+                <p>You have successfully logged in to the Smart Career Recommendation System.</p>
+            </div>
+
+            <div class="dashboard-note">
+                <p>This is a placeholder dashboard for <strong>Phase 1</strong>.</p>
+                <p>Career recommendation features will be added in the next phase.</p>
+            </div>
+
+            <button id="logoutBtn" class="btn-primary">Log Out</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

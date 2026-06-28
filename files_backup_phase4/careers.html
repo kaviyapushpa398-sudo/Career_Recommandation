@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Recommendations | Smart Career Recommendation System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/careers.css') }}">
+</head>
+<body class="inner-page">
+
+    <!-- ── Top Navigation ── -->
+    <nav class="topnav">
+        <span class="topnav-brand">🎯 Smart Career</span>
+        <div class="topnav-links">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('profile_page') }}">My Profile</a>
+            <a href="{{ url_for('github_page') }}">GitHub Analysis</a>
+            <a href="{{ url_for('careers_page') }}" class="active">Career Recommendations</a>
+        </div>
+        <button id="logoutBtn" class="btn-nav-logout">Log Out</button>
+    </nav>
+
+    <div class="cr-page-wrapper">
+
+        <!-- ── Page Header ── -->
+        <div class="cr-page-header">
+            <h1>🤖 Career Recommendations</h1>
+            <p>
+                Our engine analyses your skills, interests, certifications, projects,
+                and GitHub activity to match you against 8 tech career paths —
+                ranked by fit, with skill gap analysis and personalised learning roadmaps.
+            </p>
+        </div>
+
+        <!-- ── Generate Card ── -->
+        <div class="cr-generate-card">
+            <div class="cr-generate-text">
+                <h2>Generate Your Recommendations</h2>
+                <p>
+                    We pull data from your profile (Phase 2) and GitHub analysis (Phase 3).
+                    Complete those sections first for the most accurate results.
+                    Re-run any time after updating your profile.
+                </p>
+            </div>
+            <button class="cr-generate-btn" id="generateBtn">
+                <span id="generateBtnText">✨ Generate</span>
+                <span id="generateBtnSpinner" class="cr-spinner hidden"></span>
+            </button>
+        </div>
+
+        <!-- ── Info bar (shown when cached results exist) ── -->
+        <div class="cr-info-bar hidden" id="infoBar">
+            <span id="infoBarText"></span>
+            <button class="cr-rerun-link" id="rerunBtn">🔄 Re-run</button>
+            <button class="cr-clear-link" id="clearBtn">✕ Clear</button>
+        </div>
+
+        <!-- ── Error / Warning banners ── -->
+        <div class="cr-error-banner hidden" id="errorBanner"></div>
+        <div class="cr-warn-banner  hidden" id="warnBanner"></div>
+
+        <!-- ══════════════════════════════════════════════════════════
+             RESULTS  —  hidden until data is loaded
+             ══════════════════════════════════════════════════════════ -->
+        <div class="cr-results hidden" id="resultsSection">
+
+            <!-- ── Hero: #1 ranked career ── -->
+            <div class="cr-hero" id="heroCard">
+                <div class="cr-hero-badge" id="heroBadge">🏆</div>
+                <div class="cr-hero-info">
+                    <div class="cr-hero-rank">🥇 #1 Best Match</div>
+                    <div class="cr-hero-title"  id="heroTitle"></div>
+                    <div class="cr-hero-category" id="heroCategory"></div>
+                    <div class="cr-hero-match">
+                        <div>
+                            <div class="cr-match-pct" id="heroMatchPct">0%</div>
+                            <div class="cr-match-label">Overall Match</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Animated ring -->
+                <div class="cr-hero-ring-wrap">
+                    <svg viewBox="0 0 110 110" class="cr-ring-svg">
+                        <circle class="cr-ring-bg"   cx="55" cy="55" r="46"/>
+                        <circle class="cr-ring-fill" id="heroRingFill"
+                                cx="55" cy="55" r="46"
+                                stroke-dasharray="289"
+                                stroke-dashoffset="289"/>
+                    </svg>
+                    <div class="cr-ring-label">
+                        <span class="cr-ring-value" id="heroRingValue">0</span>
+                        <span class="cr-ring-sub">/ 100</span>
+                    </div>
+                </div>
+            </div><!-- /cr-hero -->
+
+            <!-- ── Main two-column layout ── -->
+            <div class="cr-layout">
+
+                <!-- Left: Rankings sidebar -->
+                <div class="cr-rankings-panel" id="rankingsPanel">
+                    <div class="cr-rankings-header">All Career Rankings</div>
+                    <!-- Items injected by JS -->
+                </div>
+
+                <!-- Right: Detail panel for the selected career -->
+                <div class="cr-detail-panel" id="detailPanel">
+
+                    <!-- 1. Score breakdown -->
+                    <div class="cr-card">
+                        <div class="cr-card-title">📊 Score Breakdown</div>
+                        <div class="cr-score-grid" id="scoreGrid"></div>
+                        <div class="cr-score-bars" id="scoreBars"></div>
+                    </div>
+
+                    <!-- 2. Matched & missing skills -->
+                    <div class="cr-card">
+                        <div class="cr-card-title">🛠️ Skills Analysis</div>
+                        <div class="cr-skills-two-col">
+                            <div class="cr-skills-block">
+                                <h3>✅ Matched Skills</h3>
+                                <div class="cr-tags" id="matchedSkillsTags"></div>
+                            </div>
+                            <div class="cr-skills-block">
+                                <h3>❌ Skills to Develop</h3>
+                                <div class="cr-tags" id="missingSkillsTags"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Learning roadmap -->
+                    <div class="cr-card">
+                        <div class="cr-card-title">🗺️ Learning Roadmap</div>
+                        <div class="cr-roadmap-list" id="roadmapList"></div>
+                    </div>
+
+                    <!-- 4. Cert & course suggestions -->
+                    <div class="cr-card">
+                        <div class="cr-card-title">📚 Suggestions</div>
+                        <div class="cr-suggestions-grid">
+                            <div class="cr-suggestion-block">
+                                <h3>🎓 Certifications</h3>
+                                <div class="cr-suggestion-list" id="certSuggestions"></div>
+                            </div>
+                            <div class="cr-suggestion-block">
+                                <h3>💻 Courses &amp; Books</h3>
+                                <div class="cr-suggestion-list" id="courseSuggestions"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /cr-detail-panel -->
+            </div><!-- /cr-layout -->
+
+            <!-- ── Skill Gaps panel ── -->
+            <div class="cr-gaps-section" id="skillGapsSection">
+                <div class="cr-gaps-title">⚠️ Priority Skill Gaps</div>
+                <div class="cr-gaps-subtitle">
+                    Skills that appear most frequently across your top career matches.
+                    Closing these gaps will improve multiple match scores simultaneously.
+                </div>
+                <div class="cr-gaps-grid" id="skillGapsTags"></div>
+            </div>
+
+        </div><!-- /cr-results -->
+
+    </div><!-- /cr-page-wrapper -->
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/careers.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Analysis | Smart Career Recommendation System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/github.css') }}">
+</head>
+<body class="inner-page">
+
+    <!-- ── Top Navigation ── -->
+    <nav class="topnav">
+        <span class="topnav-brand">🎯 Smart Career</span>
+        <div class="topnav-links">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('profile_page') }}">My Profile</a>
+            <a href="{{ url_for('github_page') }}" class="active">GitHub Analysis</a>
+        </div>
+        <button id="logoutBtn" class="btn-nav-logout">Log Out</button>
+    </nav>
+
+    <div class="gh-page-wrapper">
+
+        <!-- ── Page header ── -->
+        <div class="gh-page-header">
+            <h1>🐙 GitHub Analysis</h1>
+            <p>Enter your GitHub username to analyse repositories, detect programming languages and compute your developer activity score.</p>
+        </div>
+
+        <!-- ── Username input card ── -->
+        <div class="gh-input-card" id="inputCard">
+            <div class="gh-input-row">
+                <div class="gh-input-prefix">github.com /</div>
+                <input type="text" id="githubUsername"
+                       placeholder="your-github-username"
+                       maxlength="39"
+                       autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       spellcheck="false">
+                <button class="gh-analyze-btn" id="analyzeBtn">
+                    <span id="analyzeBtnText">Analyse</span>
+                    <span id="analyzeBtnSpinner" class="gh-spinner hidden"></span>
+                </button>
+            </div>
+            <div class="gh-input-error" id="inputError"></div>
+            <div class="gh-input-hint">
+                💡 Add a <code>GITHUB_TOKEN</code> to your <code>.env</code> file to raise the API rate limit from 60 to 5,000 requests/hour.
+            </div>
+        </div>
+
+        <!-- ── Last analysed info bar (shown when cached data exists) ── -->
+        <div class="gh-cache-bar hidden" id="cacheBar">
+            <span id="cacheBarText"></span>
+            <button class="gh-reanalyze-link" id="reanalyzeBtn">🔄 Re-analyse</button>
+            <button class="gh-clear-link" id="clearAnalysisBtn">✕ Clear</button>
+        </div>
+
+        <!-- ── Error banner ── -->
+        <div class="gh-error-banner hidden" id="errorBanner"></div>
+
+        <!-- ════════════════════════════════════════════════════════
+             RESULTS — hidden until analysis is loaded
+             ════════════════════════════════════════════════════════ -->
+        <div class="gh-results hidden" id="resultsSection">
+
+            <!-- Profile hero -->
+            <div class="gh-profile-hero">
+                <img class="gh-avatar" id="ghAvatar" src="" alt="GitHub avatar">
+                <div class="gh-profile-meta">
+                    <div class="gh-profile-name" id="ghName"></div>
+                    <div class="gh-profile-login">
+                        <a id="ghProfileLink" href="" target="_blank" rel="noopener"></a>
+                    </div>
+                    <div class="gh-profile-bio" id="ghBio"></div>
+                    <div class="gh-profile-badges" id="ghBadges"></div>
+                </div>
+                <div class="gh-overall-score-ring">
+                    <svg viewBox="0 0 120 120" class="gh-ring-svg">
+                        <circle class="gh-ring-bg" cx="60" cy="60" r="50"/>
+                        <circle class="gh-ring-fill" id="ringFill" cx="60" cy="60" r="50"
+                                stroke-dasharray="314" stroke-dashoffset="314"/>
+                    </svg>
+                    <div class="gh-ring-label">
+                        <span class="gh-ring-value" id="overallScoreDisplay">0</span>
+                        <span class="gh-ring-sub">/ 100</span>
+                        <span class="gh-ring-title">Overall</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats row -->
+            <div class="gh-stats-grid">
+                <div class="gh-stat-box">
+                    <div class="gh-stat-value" id="statRepos">—</div>
+                    <div class="gh-stat-label">Public Repos</div>
+                </div>
+                <div class="gh-stat-box">
+                    <div class="gh-stat-value" id="statStars">—</div>
+                    <div class="gh-stat-label">Total Stars</div>
+                </div>
+                <div class="gh-stat-box">
+                    <div class="gh-stat-value" id="statForks">—</div>
+                    <div class="gh-stat-label">Total Forks</div>
+                </div>
+                <div class="gh-stat-box">
+                    <div class="gh-stat-value" id="statFollowers">—</div>
+                    <div class="gh-stat-label">Followers</div>
+                </div>
+                <div class="gh-stat-box">
+                    <div class="gh-stat-value" id="statFollowing">—</div>
+                    <div class="gh-stat-label">Following</div>
+                </div>
+                <div class="gh-stat-box">
+                    <div class="gh-stat-value" id="statGists">—</div>
+                    <div class="gh-stat-label">Public Gists</div>
+                </div>
+            </div>
+
+            <!-- Two-column: scores + languages -->
+            <div class="gh-two-col">
+
+                <!-- Score breakdown -->
+                <div class="gh-card">
+                    <div class="gh-card-title">📊 Score Breakdown</div>
+                    <div class="gh-score-list" id="scoreList">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Language breakdown -->
+                <div class="gh-card">
+                    <div class="gh-card-title">🗂 Language Breakdown</div>
+                    <div class="gh-lang-list" id="langList">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Top repositories -->
+            <div class="gh-card gh-card-full">
+                <div class="gh-card-title">⭐ Top Repositories</div>
+                <div class="gh-repo-grid" id="repoGrid">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+
+        </div><!-- /gh-results -->
+
+    </div><!-- /gh-page-wrapper -->
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/github.js') }}"></script>
+</body>
+</html>
